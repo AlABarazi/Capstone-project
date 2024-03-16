@@ -16,8 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers, views
+from restaurant.views import BookingViewSet, UserViewSet, MenuItemsView
+router = routers.DefaultRouter()
+
+router.register(r'booking', BookingViewSet)
+router.register(r'users', UserViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('restaurant/', include('restaurant.urls'))
+path('admin/', admin.site.urls),
+path('api/', include('restaurant.urls')), # api/menu
+path('', include(router.urls)),
+path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+path('restaurant/',include('restaurant.urls')), # restaurant/menu
+path('restaurant/booking/', include(router.urls)),
+path('auth/', include('djoser.urls')), 
+path('auth/', include('djoser.urls.authtoken')) # # To login, visit the djoser generated URL http://127.0.0.1:8000/auth/token/login/. # Enter the username and password to obtain the token.
+# first creat user using admin -> use http://127.0.0.1:8000/auth/token/login/ then enter the user name and pass that you created to get the auth token.
 ]
+
